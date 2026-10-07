@@ -37,9 +37,10 @@ static void draw_device_name(lv_obj_t *canvas, const struct status_state *state)
 
 void draw_layer_status(lv_obj_t *canvas, const struct status_state *state) {
     lv_draw_label_dsc_t label_dsc;
-    // LOCAL PATCH (zmk-config): quinquefive_12 instead of quinquefive_18 so
-    // layer names up to ~7 chars fit on one line (18 wrapped after ~5).
-    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &quinquefive_12, LV_TEXT_ALIGN_RIGHT);
+    // LOCAL PATCH (zmk-config): quinquefive_14 (locally generated size)
+    // instead of quinquefive_18 so layer names up to ~6 chars fit on one
+    // line (18 wrapped after ~5, 12 fit ~7).
+    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &quinquefive_14, LV_TEXT_ALIGN_RIGHT);
 
     char fallback_layer_name[16];
 
@@ -51,8 +52,8 @@ void draw_layer_status(lv_obj_t *canvas, const struct status_state *state) {
         layer_name = fallback_layer_name;
     }
 
-    // LOCAL PATCH (zmk-config): y 115 -> 123 to keep the bottom edge of the
+    // LOCAL PATCH (zmk-config): y 115 -> 120 to keep the bottom edge of the
     // smaller font where the old one was; device-name label above it.
-    lv_canvas_draw_text(canvas, -23, 123, SCREEN_WIDTH, &label_dsc, layer_name);
+    lv_canvas_draw_text(canvas, -23, 120, SCREEN_WIDTH, &label_dsc, layer_name);
     draw_device_name(canvas, state);
 }
