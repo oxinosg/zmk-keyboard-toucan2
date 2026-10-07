@@ -13,11 +13,14 @@
 // Hardcoded names for ZMK's five BLE profiles: slot N is whichever host is
 // paired to profile N (managed with &bt BT_SEL/BT_CLR). Edit to taste.
 static const char *const profile_names[] = {
-    "SLOT0", "SLOT1", "SLOT2", "SLOT3", "SLOT4",
+    "ipad", "laptop", "pixel", "work", "SLOT4",
 };
 
-// Small label (same font as the USB/BLE indicator) directly above the layer
-// name, showing the connected host: "USB" over USB, profile name over BLE.
+// Small label (same font as the USB/BLE indicator) above the layer name,
+// showing the connected host: "USB" over USB, profile name over BLE.
+// y=104 puts the glyph top at y=105, flush with the first BLE profile dot
+// (profile_arc.c BT_DOT_START_Y) on its right, with a clear gap to the
+// layer name below.
 static void draw_device_name(lv_obj_t *canvas, const struct status_state *state) {
     const char *name = "USB";
 
@@ -31,7 +34,7 @@ static void draw_device_name(lv_obj_t *canvas, const struct status_state *state)
 
     lv_draw_label_dsc_t name_dsc;
     init_label_dsc(&name_dsc, LVGL_FOREGROUND, &quinquefive_8, LV_TEXT_ALIGN_RIGHT);
-    lv_canvas_draw_text(canvas, -23, 110, SCREEN_WIDTH, &name_dsc, name);
+    lv_canvas_draw_text(canvas, -23, 104, SCREEN_WIDTH, &name_dsc, name);
 }
 // END LOCAL PATCH --------------------------------------------------------------
 
