@@ -26,7 +26,8 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include "battery_arc_peripheral.h"
 #include "profile_arc.h"
 #include "output_arc.h"
-#include "chart.h"
+// LOCAL PATCH (zmk-config): WPM chart disabled
+// #include "chart.h"
 #else
 #include "battery.h"
 #include "battery_peripheral.h"
@@ -67,7 +68,8 @@ static void draw_top(lv_obj_t *widget, lv_color_t cbuf[], const struct status_st
     // Draw widgets
     draw_output_status(canvas, state);
     #if defined(CONFIG_TOUCAN_STATUS_SCREEN) && CONFIG_TOUCAN_STATUS_SCREEN == 2
-    draw_chart_status(canvas, state);
+    // LOCAL PATCH (zmk-config): WPM chart disabled
+    // draw_chart_status(canvas, state);
     #endif
     draw_layer_status(canvas, state);
     draw_profile_status(canvas, state);
@@ -256,31 +258,33 @@ ZMK_LISTENER(nice_view_gem_display, display_activity_event_handler);
 ZMK_SUBSCRIPTION(nice_view_gem_display, zmk_activity_state_changed);
 
 #if defined(CONFIG_TOUCAN_STATUS_SCREEN) && CONFIG_TOUCAN_STATUS_SCREEN == 2
-/**
- * WPM status
- */
-    static void set_chart_status(struct zmk_widget_screen *widget, struct chart_status_state state) {
-    widget->state.wpm = state.wpm;
-    draw_top(widget->obj, widget->cbuf, &widget->state);
-}
-
-static void chart_status_update_cb(struct chart_status_state state) {
-    struct zmk_widget_screen *widget;
-    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
-        set_chart_status(widget, state);
-    }
-}
-
-static struct chart_status_state chart_status_get_state(const zmk_event_t *eh) {
-    const struct zmk_wpm_state_changed *ev = as_zmk_wpm_state_changed(eh);
-    return (struct chart_status_state){
-        .wpm = (ev != NULL) ? ev->state : zmk_wpm_get_state(),
-    };
-}
-
-ZMK_DISPLAY_WIDGET_LISTENER(widget_chart_status, struct chart_status_state,
-                            chart_status_update_cb, chart_status_get_state);
-ZMK_SUBSCRIPTION(widget_chart_status, zmk_wpm_state_changed);
+// LOCAL PATCH (zmk-config): WPM chart disabled — whole listener block commented
+// out so keystroke-driven WPM events no longer trigger display redraws.
+// /**
+//  * WPM status
+//  */
+//     static void set_chart_status(struct zmk_widget_screen *widget, struct chart_status_state state) {
+//     widget->state.wpm = state.wpm;
+//     draw_top(widget->obj, widget->cbuf, &widget->state);
+// }
+//
+// static void chart_status_update_cb(struct chart_status_state state) {
+//     struct zmk_widget_screen *widget;
+//     SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
+//         set_chart_status(widget, state);
+//     }
+// }
+//
+// static struct chart_status_state chart_status_get_state(const zmk_event_t *eh) {
+//     const struct zmk_wpm_state_changed *ev = as_zmk_wpm_state_changed(eh);
+//     return (struct chart_status_state){
+//         .wpm = (ev != NULL) ? ev->state : zmk_wpm_get_state(),
+//     };
+// }
+//
+// ZMK_DISPLAY_WIDGET_LISTENER(widget_chart_status, struct chart_status_state,
+//                             chart_status_update_cb, chart_status_get_state);
+// ZMK_SUBSCRIPTION(widget_chart_status, zmk_wpm_state_changed);
 #endif
 
 /**
@@ -302,7 +306,8 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
     widget_output_status_init();
 
     #if defined(CONFIG_TOUCAN_STATUS_SCREEN) && CONFIG_TOUCAN_STATUS_SCREEN == 2
-    widget_chart_status_init();
+    // LOCAL PATCH (zmk-config): WPM chart disabled
+    // widget_chart_status_init();
     #endif
 
     return 0;
